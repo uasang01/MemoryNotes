@@ -8,9 +8,13 @@ plugins {
 android {
     compileSdk 31
 
+    viewBinding {
+        enabled = true
+    }
+
     defaultConfig {
         applicationId "com.example.memorynotes"
-        minSdk 31
+        minSdk 30
         targetSdk 31
         versionCode 1
         versionName "1.0"
