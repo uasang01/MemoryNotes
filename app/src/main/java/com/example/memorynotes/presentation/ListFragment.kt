@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.memorynotes.databinding.FragmentListBinding
+import com.example.memorynotes.framework.NoteListViewModel
 import com.example.memorynotes.framework.NoteViewModel
 
 class ListFragment : Fragment(), ListAction {
@@ -18,9 +19,9 @@ class ListFragment : Fragment(), ListAction {
     val binding get() = _binding!!
     private var _binding: FragmentListBinding? = null
 
-    private lateinit var noteViewModel: NoteViewModel
+    private lateinit var noteListViewModel: NoteListViewModel
 
-    private val noteListAdapter by lazy { NoteListAdapter(arrayListOf(), this)}
+    private val noteListAdapter by lazy { NoteListAdapter(arrayListOf(), this) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,13 +40,13 @@ class ListFragment : Fragment(), ListAction {
         }
         binding.addNoteButton.setOnClickListener { goToNoteDetails() }
 
-        noteViewModel = ViewModelProviders.of(this@ListFragment).get(NoteViewModel::class.java)
+        noteListViewModel = ViewModelProviders.of(this@ListFragment).get(NoteListViewModel::class.java)
 
         observeViewModels()
     }
 
     private fun observeViewModels() {
-        noteViewModel.notes.observe(viewLifecycleOwner) { noteList ->
+        noteListViewModel.notes.observe(viewLifecycleOwner) { noteList ->
             binding.loadingView.visibility = View.GONE
             binding.notesListView.visibility = View.VISIBLE
             noteListAdapter.updateNote(noteList.sortedByDescending { it.updateTime })
@@ -55,7 +56,7 @@ class ListFragment : Fragment(), ListAction {
 
     override fun onResume() {
         super.onResume()
-        noteViewModel.getNotes()
+        noteListViewModel.getNotes()
     }
 
     private fun goToNoteDetails(id: Long = 0L) {
