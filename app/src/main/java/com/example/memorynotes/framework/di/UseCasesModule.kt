@@ -2,10 +2,7 @@ package com.example.memorynotes.framework.di
 
 import com.example.memorynotes.framework.UseCases
 import com.memorynotes.core.repository.NoteRepository
-import com.memorynotes.core.usecase.AddNote
-import com.memorynotes.core.usecase.GetAllNotes
-import com.memorynotes.core.usecase.GetNote
-import com.memorynotes.core.usecase.RemoveNote
+import com.memorynotes.core.usecase.*
 import dagger.Module
 import dagger.Provides
 
@@ -16,6 +13,7 @@ class UseCasesModule {
         AddNote(repository),
         GetNote(repository),
         GetAllNotes(repository),
-        RemoveNote(repository)
+        RemoveNote(repository),
+        GetWordCount()
     )
 }

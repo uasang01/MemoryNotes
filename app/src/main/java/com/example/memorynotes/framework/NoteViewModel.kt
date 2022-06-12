@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.memorynotes.framework.di.ApplicationModule
+import com.example.memorynotes.framework.di.DaggerViewModelComponent
 import com.memorynotes.core.data.Note
 import com.memorynotes.core.repository.NoteRepository
 import com.memorynotes.core.usecase.AddNote
@@ -13,18 +15,20 @@ import com.memorynotes.core.usecase.RemoveNote
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class NoteViewModel(application: Application): AndroidViewModel(application) {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    private val noteRepository = NoteRepository(RoomNoteDataSource(application))
+    @Inject
+    lateinit var useCases: UseCases
 
-    val useCases= UseCases(
-        AddNote(noteRepository),
-        GetNote(noteRepository),
-        GetAllNotes(noteRepository),
-        RemoveNote(noteRepository)
-    )
+    init{
+        DaggerViewModelComponent.builder()
+            .applicationModule(ApplicationModule(getApplication()))
+            .build()
+            .inject(this)
+    }
 
     val saved = MutableLiveData<Boolean>()
     val notes = MutableLiveData<List<Note>>()
@@ -41,13 +45,6 @@ class NoteViewModel(application: Application): AndroidViewModel(application) {
         coroutineScope.launch {
             val note = useCases.getNote(id)
             currentNote.postValue(note)
-        }
-    }
-
-    fun getNotes(){
-        coroutineScope.launch {
-            val noteList = useCases.getAllNotes()
-            notes.postValue(noteList)
         }
     }
 

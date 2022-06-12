@@ -2,7 +2,6 @@ package com.example.memorynotes.presentation
 
 import android.app.AlertDialog
 import android.content.Context.INPUT_METHOD_SERVICE
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -28,11 +27,6 @@ class NoteFragment : Fragment() {
     private var currentNote = Note("", "", 0L, 0L)
     private var noteId = 0L
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,6 +44,7 @@ class NoteFragment : Fragment() {
         }
 
         if (noteId != 0L) {
+            setHasOptionsMenu(true)
             noteViewModel.getNote(noteId)
         }
 
@@ -68,7 +63,6 @@ class NoteFragment : Fragment() {
                 Navigation.findNavController(binding.checkButton).popBackStack()
             }
         }
-
 
         observeViewModel()
     }
@@ -108,9 +102,9 @@ class NoteFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             R.id.delete_note -> {
-                if(context != null && noteId != 0L)
+                if (context != null && noteId != 0L)
                     AlertDialog.Builder(requireContext())
                         .setTitle("삭제")
                         .setMessage("정말 삭제하시겠습니까?")
